@@ -1,0 +1,11 @@
+syntax on
+
+set nu
+set hlsearch
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set ai
+
+set fileencoding=utf8
+set fileencodings=utf8

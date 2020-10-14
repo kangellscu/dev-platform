@@ -1,0 +1,66 @@
+#########################################
+##            Global Setting
+#########################################
+
+### Paths #########################################
+
+# Point to the path of your applications code on your host
+CODE_ROOT_HOST=
+
+# Point to where the `CODE_PATH_HOST` should be in the container
+CODE_ROOT_CONTAINER=
+
+# You may add flags to the path `:cached`, `:delegated`.
+CODE_CONTAINER_FLAG=:cached
+
+# Choose storage path on your machine. For all storage systems
+DATA_PATH_HOST=
+
+# Build context
+DOCKER_BUILD_CONTEXT_ROOT=./containers
+
+### Drivers #######################################
+NETWORKS_DRIVER=bridge
+VOLUMES_DRIVER=local
+
+### Docker compose files ##################################
+
+# Select which docker-compose files to include.
+COMPOSE_FILE=docker-compose.yml
+
+# Change the separator from : to ; on Windows
+COMPOSE_PATH_SEPARATOR=:
+
+# Define the prefix of container names. This is useful if you have multiple projects that use dev-platform to have seperate containers per project.
+COMPOSE_PROJECT_NAME=dev
+
+### Accounts ######################################
+USER=dev
+GROUP=dev
+UID=1000
+GID=1000
+
+### Git ###########################################
+GIT_USER=
+GIT_EMAIL=
+
+# Timezone
+TIMEZONE="Asia/Chongqing"
+
+#########################################
+##          Alpine
+#########################################
+ALPINE_VERSION=3.12 # related php version is: 7.3.23
+ALPINE_MIRROR="http://mirrors.aliyun.com/alpine/v3.12/main\nhttp://mirrors.aliyun.com/alpine/v3.12/community"
+
+#########################################
+##          PHP
+#########################################
+
+#########################################
+##          Workspace
+#########################################
+WORKSPACE_SSH_PORT=<Your host mapping port for sshd>
+SSH_PRIVATE_KEY_FILE=<path/to/rsa-private-key>
+SSH_PUBLIC_KEY_FILE=<path/to/rsa-public-key>
+SSH_CONFIG_FILE=<path/to/ssh-config>

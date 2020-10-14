@@ -1,0 +1,43 @@
+version: "3.8"
+
+networks:
+  frontend:
+    driver: ${NETWORKS_DRIVER}
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+services:
+  workspace:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/workspace
+      args:
+        - ALPINE_VERSION=${ALPINE_VERSION}
+        - ALPINE_MIRROR=${ALPINE_MIRROR}
+        - USER=${DEV_USER}
+        - GROUP=${DEV_GROUP}
+        - UID=${DEV_UID}
+        - GID=${DEV_GID}
+        - GIT_USER=${GIT_USER}
+        - GIT_EMAIL=${GIT_EMAIL}
+        - TIMEZONE=${TIMEZONE}
+    hostname: workspace
+    volumes:
+      - type: bind
+        source: ${CODE_ROOT_HOST}
+        target: ${CODE_ROOT_CONTAINER}
+        consistency: ${CODE_CONTAINER_FLAG}
+      - type: tmpfs
+        target: /run
+      - "${SSH_PUBLIC_KEY_FILE}:/home/${DEV_USER}/.ssh/authorized_keys"
+      - "${SSH_CONFIG_FILE}:/home/${DEV_USER}/.ssh/config"
+      - "${SSH_PRIVATE_KEY_FILE}:/home/${DEV_USER}/.ssh/keys/${DEV_USER}"
+    environment:
+      CODE_ROOT_CONTAINER: ${CODE_ROOT_CONTAINER}
+    ports:
+      - "${WORKSPACE_SSH_PORT}:22"
+    tty: true
+    networks:
+      - frontend
+      - backend
+    deploy:
+      replicas: 1
