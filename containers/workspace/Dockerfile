@@ -1,7 +1,10 @@
-ARG ALPINE_VERSION="3.12"
-FROM alpine:${ALPINE_VERSION}
+ARG BASE_TAG
+FROM php:${BASE_TAG}
 
 USER root
+
+# install (install-php-extensions)[https://github.com/mlocati/docker-php-extension-installer]
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/ 
 
 ##############################################
 # dev-platform non-user user
@@ -34,8 +37,8 @@ RUN echo -e "${ALPINE_MIRROR}" > /etc/apk/repositories && \
     adduser -u ${UID} -G ${GROUP} -D ${USER} --shell /bin/bash && \
     # set hostname
     echo "workspace" > /etc/hostname && \
-    # install php
-    apk add php7 php7-bcmath php7-ctype php7-fileinfo php7-json php7-mbstring php7-openssl php7-pdo php7-tokenizer php7-xml php7-phar && \
+    # install php extension
+    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml phar && \
     # global install composer
     php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
     php composer-setup.php && \

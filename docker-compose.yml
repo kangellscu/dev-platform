@@ -11,7 +11,7 @@ services:
     build:
       context: ${DOCKER_BUILD_CONTEXT_ROOT}/workspace
       args:
-        - ALPINE_VERSION=${ALPINE_VERSION}
+        - BASE_TAG=${PHP_CLI_TAG}
         - ALPINE_MIRROR=${ALPINE_MIRROR}
         - USER=${DEV_USER}
         - GROUP=${DEV_GROUP}
