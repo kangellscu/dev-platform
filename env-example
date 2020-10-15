@@ -35,10 +35,10 @@ COMPOSE_PATH_SEPARATOR=:
 COMPOSE_PROJECT_NAME=dev
 
 ### Accounts ######################################
-USER=dev
-GROUP=dev
-UID=1000
-GID=1000
+DEV_USER=dev
+DEV_GROUP=dev
+DEV_UID=1000
+DEV_GID=1000
 
 ### Git ###########################################
 GIT_USER=
@@ -64,3 +64,10 @@ WORKSPACE_SSH_PORT=<Your host mapping port for sshd>
 SSH_PRIVATE_KEY_FILE=<path/to/rsa-private-key>
 SSH_PUBLIC_KEY_FILE=<path/to/rsa-public-key>
 SSH_CONFIG_FILE=<path/to/ssh-config>
+
+#########################################
+##          Openresty
+#########################################
+OPENRESTY_TAG=1.17.8.2-5-centos
+OPENRESTY_CONF_DIR_HOST=
+OPENRESTY_PORT=

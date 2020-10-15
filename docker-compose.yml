@@ -41,3 +41,21 @@ services:
       - backend
     deploy:
       replicas: 1
+  openresty:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/openresty
+      args:
+        - OPENRESTY_TAG=${OPENRESTY_TAG}
+    hostname: openresty
+    volumes:
+      - type: bind
+        source: ${OPENRESTY_CONF_DIR_HOST}
+        target: /etc/nginx/conf.d
+      - type: bind
+        source: ${CODE_ROOT_HOST}
+        target: /var/www
+    ports:
+      - "${OPENRESTY_PORT}:80"
+    tty: true
+    networks:
+      - frontend
