@@ -46,6 +46,7 @@ services:
       context: ${DOCKER_BUILD_CONTEXT_ROOT}/openresty
       args:
         - OPENRESTY_TAG=${OPENRESTY_TAG}
+        - TIMEZONE=${TIMEZONE}
     hostname: openresty
     volumes:
       - type: bind
@@ -59,3 +60,19 @@ services:
     tty: true
     networks:
       - frontend
+  php-fpm:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/php-fpm
+      args:
+        - BASE_TAG=${PHP_FPM_TAG}
+        - ALPINE_MIRROR=${ALPINE_MIRROR}
+        - TIMEZONE=${TIMEZONE}
+    hostname: php-fpm
+    volumes:
+      - type: bind
+        source: ${CODE_ROOT_HOST}
+        target: /var/www
+    tty: true
+    networks:
+      - frontend
+      - backend
