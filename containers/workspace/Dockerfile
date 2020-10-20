@@ -59,7 +59,9 @@ RUN echo -e "${ALPINE_MIRROR}" > /etc/apk/repositories && \
     apk add rsyslog && \
     rc-update add rsyslog boot && \
     # create soft link for python
-    ln -s /usr/bin/python3 /usr/bin/python
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    # install nodejs & npm
+    apk add nodejs npm
 
 #######################################
 # Install & configure ssh
