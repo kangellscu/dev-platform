@@ -74,3 +74,12 @@ SSH_CONFIG_FILE=<path/to/ssh-config>
 OPENRESTY_TAG=1.17.8.2-5-centos
 OPENRESTY_CONF_DIR_HOST=
 OPENRESTY_PORT=
+
+#########################################
+##          Mongo
+#########################################
+MONGO_TAG=latest
+
+# Set mongod initial auth username & password 
+MONGO_INITDB_ROOT_USERNAME=
+MONGO_INITDB_ROOT_PASSWORD=

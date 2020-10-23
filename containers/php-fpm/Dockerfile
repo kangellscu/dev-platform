@@ -16,4 +16,4 @@ RUN echo -e "${ALPINE_MIRROR}" > /etc/apk/repositories && \
     echo "${TIMEZONE}" > /etc/timezone && \
     apk del tzdata && \
     # install php extension
-    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml
+    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml mongodb

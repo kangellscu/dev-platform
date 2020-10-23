@@ -38,7 +38,7 @@ RUN echo -e "${ALPINE_MIRROR}" > /etc/apk/repositories && \
     # set hostname
     echo "workspace" > /etc/hostname && \
     # install php extension
-    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml phar && \
+    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml phar mongodb && \
     # global install composer
     php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
     php composer-setup.php && \

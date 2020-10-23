@@ -6,6 +6,11 @@ networks:
   backend:
     driver: ${NETWORKS_DRIVER}
 
+volumes:
+  mongo-data:
+    name: mongo-data
+    driver: ${VOLUMES_DRIVER}
+
 services:
   workspace:
     build:
@@ -75,4 +80,22 @@ services:
     tty: true
     networks:
       - frontend
+      - backend
+  mongo:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/mongo
+      args:
+        - MONGO_TAG=${MONGO_TAG}
+    hostname: mongo
+    volumes:
+      - type: volume
+        source: mongo-data
+        target: /data/db
+        volume:
+          nocopy: true
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    tty: true
+    networks:
       - backend
