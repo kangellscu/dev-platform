@@ -42,6 +42,7 @@ pdo
 tokenizer
 xml
 mongodb
+pecl-redis
 "
 for ext in $extentions; do
   yum install -y php-$ext
