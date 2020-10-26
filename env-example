@@ -85,7 +85,12 @@ OPENRESTY_PORT=
 #########################################
 ##          Mongo
 #########################################
-MONGO_TAG=latest
+MONGO_VERSION=4.4.1
+MONGO_TAG=${MONGO_VERSION}-bionic
+
+# Set mongod initial auth username & password 
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_INITDB_ROOT_PASSWORD=
 
 #########################################
 ##          Node.js
@@ -98,7 +103,3 @@ NODEJS_VERSION=12
 #########################################
 PYTHON_VERSION=3.8.5
 PYTHON_SOURCE_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
-
-# Set mongod initial auth username & password 
-MONGO_INITDB_ROOT_USERNAME=
-MONGO_INITDB_ROOT_PASSWORD=

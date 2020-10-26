@@ -24,10 +24,12 @@ services:
         - GIT_USER=${GIT_USER}
         - GIT_EMAIL=${GIT_EMAIL}
         - TIMEZONE=${TIMEZONE}
+        - CENTOS_VERSION=${CENTOS_VERSION}
         - PYTHON_VERSION=${PYTHON_VERSION}
         - PYTHON_SOURCE_URL=${PYTHON_SOURCE_URL}
         - NODEJS_VERSION=${NODEJS_VERSION}
         - PHP_VERSION=${PHP_VERSION}
+        - MONGO_VERSION=${MONGO_VERSION}
     hostname: workspace
     volumes:
       - type: bind

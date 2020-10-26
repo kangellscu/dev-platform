@@ -82,6 +82,13 @@ COPY ./nodejs.yum.sh /tmp/nodejs-install.sh
 RUN source /tmp/nodejs-install.sh ${NODEJS_VERSION}
 
 #######################################
+# Install mongo shell & tools
+#######################################
+ARG MONGO_VERSION=${MONGO_VERSION}
+COPY ./mongo.yum.sh /tmp/mongo-install.sh
+RUN source /tmp/mongo-install.sh ${MONGO_VERSION} ${CENTOS_VERSION}
+
+#######################################
 # Install & configure ssh
 #######################################
 COPY ./sshd_config /etc/ssh/sshd_config
