@@ -16,8 +16,7 @@ services:
     build:
       context: ${DOCKER_BUILD_CONTEXT_ROOT}/workspace
       args:
-        - BASE_TAG=${PHP_CLI_TAG}
-        - ALPINE_MIRROR=${ALPINE_MIRROR}
+        - BASE_TAG=${CENTOS_TAG}
         - USER=${DEV_USER}
         - GROUP=${DEV_GROUP}
         - UID=${DEV_UID}
@@ -25,6 +24,10 @@ services:
         - GIT_USER=${GIT_USER}
         - GIT_EMAIL=${GIT_EMAIL}
         - TIMEZONE=${TIMEZONE}
+        - PYTHON_VERSION=${PYTHON_VERSION}
+        - PYTHON_SOURCE_URL=${PYTHON_SOURCE_URL}
+        - NODEJS_VERSION=${NODEJS_VERSION}
+        - PHP_VERSION=${PHP_VERSION}
     hostname: workspace
     volumes:
       - type: bind
@@ -40,12 +43,15 @@ services:
       CODE_ROOT_CONTAINER: ${CODE_ROOT_CONTAINER}
     ports:
       - "${WORKSPACE_SSH_PORT}:22"
+    privileged: true
     tty: true
     networks:
       - frontend
       - backend
     deploy:
       replicas: 1
+    command: ["/sbin/init"]
+
   openresty:
     build:
       context: ${DOCKER_BUILD_CONTEXT_ROOT}/openresty

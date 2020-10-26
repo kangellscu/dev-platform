@@ -1,5 +1,5 @@
 ARG BASE_TAG
-FROM php:${BASE_TAG}
+FROM centos:${BASE_TAG}
 
 USER root
 
@@ -19,49 +19,67 @@ ENV GROUP=${GROUP}
 ARG GIT_USER
 ARG GIT_EMAIL
 
-ARG ALPINE_MIRROR="http://mirrors.aliyun.com/alpine/v3.12/main\nhttp://mirrors.aliyun.com/alpine/v3.12/community"
+ARG CENTOS_VERSION=7
 ARG TIMEZONE="Asia/Chongqing"
-RUN echo -e "${ALPINE_MIRROR}" > /etc/apk/repositories && \
-    apk update && \
+RUN yum install -y wget && \
+    # use aliyun mirror
+    wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-${CENTOS_VERSION}.repo && \
+    sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo && \
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-${CENTOS_VERSION}.noarch.rpm && \
+    yum update -y && \
     # install network tools
-    apk add curl wget iputils net-tools && \
+    yum install -y curl iputils net-tools && \
+    yum groupinstall -y 'Development Tools' && \
     # set timezone
-    apk add tzdata && \
     cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
-    apk del tzdata && \
     # mixed tools
-    apk add bash bash-doc bash-completion vim && \
+    yum install -y bash bash-doc bash-completion vim && \
     # add user & group
-    addgroup -g ${GID} ${GROUP} && \
-    adduser -u ${UID} -G ${GROUP} -D ${USER} --shell /bin/bash && \
-    # set hostname
-    echo "workspace" > /etc/hostname && \
-    # install php extension
-    install-php-extensions bcmath ctype fileinfo json mbstring openssl pdo tokenizer xml phar mongodb && \
-    # global install composer
-    php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
-    php composer-setup.php && \
-    rm -rf composer-setup.php && \
-    mv composer.phar /usr/local/bin/composer && \
+    groupadd -g ${GID} ${GROUP} && \
+    useradd -u ${UID} -g ${GID} --shell /bin/bash ${USER} && \
     # install git
-    apk add git && \
+    yum install -y git && \
     su ${USER} -c 'git config --global user.name "${GIT_USER}"' && \
     su ${USER} -c 'git config --global user.email "${GIT_EMAIL}"' && \
     su ${USER} -c 'git config --global core.editor vim' && \
     # install supervisor
-    apk add openrc supervisor && \
-    rc-update add supervisord boot && \
+    yum install -y supervisor && \
+    systemctl enable supervisord && \
     mkdir -p /etc/supervisor.d && \
     # install rsyslog
-    # -- this sed command must be run, cause tty[1-6] not exists
-    sed -i 's/^tty[0-9]::respawn/#&/g' /etc/inittab && \
-    apk add rsyslog && \
-    rc-update add rsyslog boot && \
-    # create soft link for python
-    ln -s /usr/bin/python3 /usr/bin/python && \
-    # install nodejs & npm
-    apk add nodejs npm
+    yum install -y rsyslog
+
+#######################################
+# Install & configure php cli
+#######################################
+ARG PHP_VERSION=${PHP_VERSION}
+COPY ./php.yum.sh /tmp/php-install.sh
+RUN source /tmp/php-install.sh ${PHP_VERSION} ${CENTOS_VERSION}
+COPY ./composer-config.json /home/${USER}/.composer/config.json
+
+# install composer
+RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    rm -rf composer-setup.php && \
+    mv composer.phar /usr/local/bin/composer && \
+    chown -R ${USER}:${GROUP} /home/${USER}/.composer
+
+#######################################
+# Install & configure python
+#######################################
+#ln -s /usr/bin/python3 /usr/bin/python
+ARG PYTHON_VERSION=3.8.5
+ARG PYTHON_SOURCE_URL="https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
+COPY ./python.yum.sh /tmp/python-install.sh
+RUN source /tmp/python-install.sh ${PYTHON_VERSION} ${PYTHON_SOURCE_URL}
+
+#######################################
+# Install & configure nodejs & npm
+#######################################
+ARG NODEJS_VERSION=12
+COPY ./nodejs.yum.sh /tmp/nodejs-install.sh
+RUN source /tmp/nodejs-install.sh ${NODEJS_VERSION}
 
 #######################################
 # Install & configure ssh
@@ -77,9 +95,9 @@ RUN mkdir -p /home/${USER}/.ssh/keys && \
     touch /home/${USER}/.ssh/config && \
     chown -R ${USER}:${GROUP} /home/${USER}/.ssh && \
     # Resolve ssh connection refused cause account be locked
-    sed -i 's/leikou:!/leikou:*/g' /etc/shadow && \
-    apk add openssh && \
-    rc-update add sshd boot
+    sed -i 's/leikou:!!/leikou:*/g' /etc/shadow && \
+    yum install -y openssh openssh-server && \
+    systemctl enable sshd
 
 #######################################
 # User aliases
@@ -94,19 +112,10 @@ RUN echo "source ./.aliases.sh" >> /root/.bashrc && \
     chown ${USER}:${GROUP} /home/${USER}/.bash_profile
 
 #######################################
-# Vimrc
+# Vimrc customization
 #######################################
 COPY ./vimrc /etc/vim/vimrc
-
-#######################################
-# Composer mirror config
-#######################################
-COPY ./composer.json /home/${USER}/.composer/composer.json
-RUN chown -R ${USER}:${GROUP} /home/${USER}/.composer
-
-#######################################
-# SSHD configuration
-#######################################
+RUN cat /etc/vim/vimrc >> /etc/vimrc
 
 VOLUME [ "/sys/fs/cgroup" ]
 
@@ -114,7 +123,7 @@ ARG WORKDIR=/home/${USER}
 WORKDIR ${WORKDIR}
 
 # Required, openrc will not working if init not invoked.
-CMD ["init"]
+CMD ["/sbin/init"]
 
 # Set user to ${USER}, default login user is ${USER} and all bind mount owner be the ${USER}
 #USER ${USER}

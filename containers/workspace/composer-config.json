@@ -1,4 +1,5 @@
 {
+  "config": {},
   "repositories": {
     "packagist": {
       "type": "composer",
