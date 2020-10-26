@@ -48,6 +48,12 @@ GIT_EMAIL=
 TIMEZONE="Asia/Chongqing"
 
 #########################################
+##          Centos
+#########################################
+CENTOS_VERSION=7
+CENTOS_TAG="centos${CENTOS_VERSION}"
+
+#########################################
 ##          Alpine
 #########################################
 ALPINE_MIRROR="http://mirrors.aliyun.com/alpine/v3.12/main\nhttp://mirrors.aliyun.com/alpine/v3.12/community"
@@ -57,8 +63,9 @@ ALPINE_MIRROR="http://mirrors.aliyun.com/alpine/v3.12/main\nhttp://mirrors.aliyu
 ## We used docker official php image, available tags please
 ## referer to https://hub.docker.com/_/php
 #########################################
-PHP_CLI_TAG=7.4-cli-alpine3.12
-PHP_FPM_TAG=7.4-fpm-alpine3.12
+PHP_VERSION=7.4
+PHP_CLI_TAG=${PHP_VERSION}-cli-alpine3.12
+PHP_FPM_TAG=${PHP_VERSION}-fpm-alpine3.12
 
 #########################################
 ##          Workspace
@@ -79,6 +86,18 @@ OPENRESTY_PORT=
 ##          Mongo
 #########################################
 MONGO_TAG=latest
+
+#########################################
+##          Node.js
+##  Please referer to: https://github.com/nodesource/distributions
+#########################################
+NODEJS_VERSION=12
+
+#########################################
+##          Python
+#########################################
+PYTHON_VERSION=3.8.5
+PYTHON_SOURCE_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 
 # Set mongod initial auth username & password 
 MONGO_INITDB_ROOT_USERNAME=
