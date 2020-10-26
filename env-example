@@ -93,6 +93,11 @@ MONGO_INITDB_ROOT_USERNAME=root
 MONGO_INITDB_ROOT_PASSWORD=
 
 #########################################
+##          PHP-Worker
+#########################################
+PHP_WORKER_SUPERVISOR_CONF_ROOT=
+
+#########################################
 ##          Node.js
 ##  Please referer to: https://github.com/nodesource/distributions
 #########################################

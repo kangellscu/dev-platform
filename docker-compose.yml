@@ -53,7 +53,6 @@ services:
     deploy:
       replicas: 1
     command: ["/sbin/init"]
-
   openresty:
     build:
       context: ${DOCKER_BUILD_CONTEXT_ROOT}/openresty
@@ -88,6 +87,21 @@ services:
     tty: true
     networks:
       - frontend
+      - backend
+  php-worker:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/php-worker
+      args:
+        - BASE_TAG=${PHP_CLI_TAG}
+        - ALPINE_MIRROR=${ALPINE_MIRROR}
+        - TIMEZONE=${TIMEZONE}
+    hostname: php-worker
+    volumes:
+      - type: bind
+        source: ${PHP_WORKER_SUPERVISOR_CONF_ROOT}
+        target: /etc/supervisor.d
+    tty: true
+    networks:
       - backend
   mongo:
     build:
