@@ -30,3 +30,7 @@ make altinstall && make clean
 # set shortcut
 ln -s $(ls /usr/local/python3/bin/python3* | grep -e '[0-9]$') /usr/local/bin/python3
 ln -s $(ls /usr/local/python3/bin/pip3* | grep -e '[0-9]$') /usr/local/bin/pip3
+
+# Clean
+rm -rf /tmp/python-${PYTHON_VERSION}.tgz
+rm -rf /tmp/Python-${PYTHON_VERSION}
