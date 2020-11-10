@@ -38,17 +38,19 @@ RUN yum install -y wget && \
     # add user & group
     groupadd -g ${GID} ${GROUP} && \
     useradd -u ${UID} -g ${GID} --shell /bin/bash ${USER} && \
-    # install git
-    yum install -y git && \
-    su ${USER} -c 'git config --global user.name "${GIT_USER}"' && \
-    su ${USER} -c 'git config --global user.email "${GIT_EMAIL}"' && \
-    su ${USER} -c 'git config --global core.editor vim' && \
     # install supervisor
     yum install -y supervisor && \
     systemctl enable supervisord && \
-    mkdir -p /etc/supervisor.d && \
     # install rsyslog
     yum install -y rsyslog
+
+#######################################
+# Install & configure git
+#######################################
+COPY ./gitconfig /home/${USER}/.gitconfig
+RUN yum install -y git && \
+    su ${USER} -c 'git config --global user.name "${GIT_USER}"' && \
+    su ${USER} -c 'git config --global user.email "${GIT_EMAIL}"'
 
 #######################################
 # Install & configure php cli
@@ -121,8 +123,12 @@ RUN echo "source ./.aliases.sh" >> /root/.bashrc && \
 #######################################
 # Vimrc customization
 #######################################
-COPY ./vimrc /etc/vim/vimrc
-RUN cat /etc/vim/vimrc >> /etc/vimrc
+USER ${USER}
+COPY ./vimrc /home/${USER}/.vimrc
+RUN git clone https://github.com/ekalinin/Dockerfile.vim.git /tmp/vim-dockerfile && \
+    cd /tmp/vim-dockerfile && \
+    make install
+USER root
 
 VOLUME [ "/sys/fs/cgroup" ]
 
@@ -131,6 +137,3 @@ WORKDIR ${WORKDIR}
 
 # Required, openrc will not working if init not invoked.
 CMD ["/sbin/init"]
-
-# Set user to ${USER}, default login user is ${USER} and all bind mount owner be the ${USER}
-#USER ${USER}
