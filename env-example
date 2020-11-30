@@ -74,6 +74,7 @@ WORKSPACE_SSH_PORT=<Your host mapping port for sshd>
 SSH_PRIVATE_KEY_FILE=<path/to/rsa-private-key>
 SSH_PUBLIC_KEY_FILE=<path/to/rsa-public-key>
 SSH_CONFIG_FILE=<path/to/ssh-config>
+WORKSPACE_GO_ENABLE=false
 
 #########################################
 ##          Openresty
@@ -108,3 +109,8 @@ NODEJS_VERSION=12
 #########################################
 PYTHON_VERSION=3.8.5
 PYTHON_SOURCE_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
+
+#########################################
+##          Go
+#########################################
+GO_DOWNLOAD_URL=https://mirrors.ustc.edu.cn/golang/go1.15.5.linux-amd64.tar.gz

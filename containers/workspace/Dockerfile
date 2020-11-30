@@ -109,6 +109,18 @@ RUN mkdir -p /home/${USER}/.ssh/keys && \
     systemctl enable sshd
 
 #######################################
+# Install go-lang
+#######################################
+ARG GO_ENABLE=${GO_ENABLE}
+ARG GO_DOWNLOAD_URL=${GO_DOWNLOAD_URL}
+COPY ./go.linux.sh /tmp/go.linux.sh
+RUN if [ ${GO_ENABLE} = true ]; then \
+    # run installation script
+    source /tmp/go.linux.sh ${GO_DOWNLOAD_URL} && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/${USER}/.bashrc \
+;fi
+
+#######################################
 # User aliases
 #######################################
 COPY ./aliases.sh /root/.aliases.sh

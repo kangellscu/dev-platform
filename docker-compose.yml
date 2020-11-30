@@ -30,6 +30,8 @@ services:
         - NODEJS_VERSION=${NODEJS_VERSION}
         - PHP_VERSION=${PHP_VERSION}
         - MONGO_VERSION=${MONGO_VERSION}
+        - GO_ENABLE=${WORKSPACE_GO_ENABLE}
+        - GO_DOWNLOAD_URL=${GO_DOWNLOAD_URL}
     hostname: workspace
     volumes:
       - type: bind
