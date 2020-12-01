@@ -74,7 +74,8 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
 ARG PYTHON_VERSION=3.8.5
 ARG PYTHON_SOURCE_URL="https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
 COPY ./python.yum.sh /tmp/python-install.sh
-RUN source /tmp/python-install.sh ${PYTHON_VERSION} ${PYTHON_SOURCE_URL}
+RUN source /tmp/python-install.sh ${PYTHON_VERSION} ${PYTHON_SOURCE_URL} && \
+    echo 'export PATH=$PATH:/usr/local/python3/bin' >> /home/${USER}/.bashrc
 
 #######################################
 # Install & configure nodejs & npm
@@ -140,6 +141,8 @@ COPY ./vimrc /home/${USER}/.vimrc
 RUN git clone https://github.com/ekalinin/Dockerfile.vim.git /tmp/vim-dockerfile && \
     cd /tmp/vim-dockerfile && \
     make install
+COPY ./go.vim /home/${USER}/.vim/syntax/go.vim
+RUN echo 'autocmd BufRead,BufNewFile *.go set ft=go' > /home/${USER}/.vim/ftdetect/go.vim
 USER root
 
 VOLUME [ "/sys/fs/cgroup" ]

@@ -108,7 +108,7 @@ NODEJS_VERSION=12
 ##          Python
 #########################################
 PYTHON_VERSION=3.8.5
-PYTHON_SOURCE_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
+PYTHON_SOURCE_URL=https://cdn.npm.taobao.org/dist/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 
 #########################################
 ##          Go
