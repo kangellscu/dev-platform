@@ -34,7 +34,7 @@ RUN yum install -y wget && \
     cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
     # mixed tools
-    yum install -y bash bash-doc bash-completion vim && \
+    yum install -y bash bash-doc bash-completion vim strace && \
     # add user & group
     groupadd -g ${GID} ${GROUP} && \
     useradd -u ${UID} -g ${GID} --shell /bin/bash ${USER} && \
