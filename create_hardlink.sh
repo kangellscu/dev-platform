@@ -7,6 +7,7 @@ go.linux.sh
 nodejs.yum.sh
 php.yum.sh
 python.yum.sh
+mariadb.yum.sh
 "
 
 for link_file in ${WORKSPACE_LINKS}; do

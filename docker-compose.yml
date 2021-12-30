@@ -10,6 +10,12 @@ volumes:
   mongo-data:
     name: mongo-data
     driver: ${VOLUMES_DRIVER}
+  confluence-home:
+    name: confluence-home
+    driver: ${VOLUMES_DRIVER}
+  mariadb-data:
+    name: mariadb-data
+    driver: ${VOLUMES_DRIVER}
 
 services:
   workspace:
@@ -30,6 +36,7 @@ services:
         - NODEJS_VERSION=${NODEJS_VERSION}
         - PHP_VERSION=${PHP_VERSION}
         - MONGO_VERSION=${MONGO_VERSION}
+        - MARIADB_VERSION=${MARIADB_VERSION}
         - GO_ENABLE=${WORKSPACE_GO_ENABLE}
         - GO_DOWNLOAD_URL=${GO_DOWNLOAD_URL}
     hostname: workspace
@@ -47,6 +54,7 @@ services:
       CODE_ROOT_CONTAINER: ${CODE_ROOT_CONTAINER}
     ports:
       - "${WORKSPACE_SSH_PORT}:22"
+      - "${WORKSPACE_WEB_PORT}:8080"
     privileged: true
     tty: true
     networks:
@@ -120,6 +128,42 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    tty: true
+    networks:
+      - backend
+  confluence:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/confluence
+      args:
+        - CONFLUENCE_TAG=${CONFLUENCE_TAG}
+    hostname: confluence
+    volumes:
+      - type: volume
+        source: confluence-home
+        target: /var/atlassian/application-data/confluence
+        volume:
+          nocopy: true
+    ports:
+      - "${CONFLUENCE_PORT}:8090"
+      - "8091:8091"
+    tty: true
+    networks:
+      - backend
+      - frontend
+  mariadb:
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_ROOT}/mariadb
+      args:
+        - MARIADB_TAG=${MARIADB_TAG}
+    hostname: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - type: volume
+        source: mariadb-data
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
     tty: true
     networks:
       - backend

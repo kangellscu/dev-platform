@@ -1,0 +1,2 @@
+ARG MARIADB_TAG=latest
+FROM mariadb:${MARIADB_TAG}

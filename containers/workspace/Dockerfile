@@ -92,6 +92,13 @@ COPY ./mongo.yum.sh /tmp/mongo-install.sh
 RUN source /tmp/mongo-install.sh ${MONGO_VERSION} ${CENTOS_VERSION}
 
 #######################################
+# Install MariaDB client
+#######################################
+ARG MARIADB_VERSION=${MARIADB_VERSION}
+COPY ./mariadb.yum.sh /tmp/mariadb-install.sh
+RUN source /tmp/mariadb-install.sh ${MARIADB_VERSION} ${CENTOS_VERSION}
+
+#######################################
 # Install & configure ssh
 #######################################
 COPY ./sshd_config /etc/ssh/sshd_config
